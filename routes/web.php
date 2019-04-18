@@ -11,10 +11,24 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['middleware' => ['auth']], function()
+{
+	Route::get('/', function () {
+	    return view('welcome');
+	})->name('home');
+
+    Route::group(['prefix' => '/telco'], function()
+	{
+		Route::get('/', 'TelcoController@index')->name('telco_list');
+
+		Route::get('/add', 'TelcoController@showAddForm')->name('telco_add');
+		Route::post('/add', 'TelcoController@add');
+
+		Route::get('/edit/{id}', 'TelcoController@showEditForm')->name('telco_edit');
+		Route::post('/edit/{id}', 'TelcoController@edit')->where('id', '[0-9]+');	
+	});
+});

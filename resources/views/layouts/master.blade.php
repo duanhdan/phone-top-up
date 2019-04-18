@@ -43,8 +43,12 @@
     </head>
     <body>
         <div class="page">
-            {!!view('common/header')!!}
-            @yield('content')
+            <div class="flex-fill">
+                {!!view('common/header',['menu_active' => isset($menu_active) ? $menu_active : ''])!!}
+                <div class="my-3 my-md-5">        
+                    @yield('content')
+                </div>
+            </div>
             {!!view('common/footer')!!}
         </div>
         @yield('script')
