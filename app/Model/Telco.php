@@ -9,6 +9,6 @@ class Telco extends Model
     protected $table = 'telco';
 
     protected $fillable = [
-        'name', 'permissions'
+        'name', 'code', 'status'
     ];
 }

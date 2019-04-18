@@ -12,6 +12,18 @@ let hexToRgba = function(hex, opacity) {
   return 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + opacity + ')';
 };
 
+function growl_notice(title, message, type = 'notice'){
+    switch(type){
+        case 'notice':
+            $.growl.notice({title: title, message: message });
+            break;
+        case 'error': 
+            $.growl.error({title: title, message: message });
+            break;
+    }
+    
+}
+
 /**
  *
  */
