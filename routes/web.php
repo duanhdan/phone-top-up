@@ -30,5 +30,7 @@ Route::group(['middleware' => ['auth']], function()
 
 		Route::get('/edit/{id}', 'TelcoController@showEditForm')->name('telco_edit');
 		Route::post('/edit/{id}', 'TelcoController@edit')->where('id', '[0-9]+');	
+
+		Route::post('/delete', 'TelcoController@delete')->name('telco_delete');
 	});
 });

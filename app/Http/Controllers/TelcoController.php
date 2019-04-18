@@ -80,4 +80,23 @@ class TelcoController extends Controller
         $request->session()->flash('message_success', 'Cập nhật Telco thành công');
         return redirect(route('telco_list'));
     }
+
+    public function delete(Request $request){
+        $request->validate([
+            'id' => 'required',
+        ]);
+        $input = $request->only('id');
+        $id = (int)$input['id'];
+
+        $telco = Telco::find($id);
+        if(!$telco){
+            return response()->json(['error' => 1, 'message' => 'Telco không tồn tại']);
+        }
+        //update status = -1
+        $telco->status = -1;
+        $telco->save();
+
+        return response()->json(['error' => 0, 'message' => 'Xóa Telco thành công']);
+
+    }
 }

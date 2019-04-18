@@ -37,7 +37,7 @@
                                     <td>{{ $telco->created_at }}</td>
                                     <th>
                                         <a href="{{ route('telco_edit',$telco->id)}}" class="mr-2"><i class="fe fe-edit" data-toggle="tooltip" data-original-title="Sửa"></i></a> | 
-                                        <a href="" class="ml-2"><i class="fe fe-trash-2" style="color:#dd4b39" data-toggle="tooltip" data-original-title="Xóa"></i></a>
+                                        <a href="javascript:;" class="ml-2 ajax_action" data-id="{{$telco->id}}" data-method="POST" data-action="{{route('telco_delete')}}" data-label="Xóa Telco"><i class="fe fe-trash-2" style="color:#dd4b39" data-toggle="tooltip" data-original-title="Xóa"></i></a>
                                     </th>
                                 </tr>
                                 @endforeach
