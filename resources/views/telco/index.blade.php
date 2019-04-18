@@ -22,7 +22,8 @@
                                     <th>Telco</th>
                                     <th>Code</th>
                                     <th>Trạng thái</th>
-                                    <th width="20%">Thao tác</th>
+                                    <th>Ngày tạo</th>
+                                    <th width="10%">Thao tác</th>
                                 <tr>
                             </thead>
                             <tbody align="center">
@@ -31,10 +32,12 @@
                                     <td>{{ $key + 1}}</td>
                                     <td>{{ $telco->name }}</td>
                                     <td>{{ $telco->code }}</td>
-                                    <td>{!! ($telco->status == 1) ? '<i class="fe fe-check-circle" style="color:#398439;" data-toggle="tooltip" data-original-title="Hoạt động"></i>': '<i class="fe fe-x-circle" data-toggle="tooltip" style="color:#dd4b39" data-original-title="Khóa"></i>'!!}</td>
+                                    <td>{!! ($telco->status == 1) ? '<i class="fe fe-check-circle" style="color:#398439;" data-toggle="tooltip" data-original-title="Hoạt động"></i>': '<i class="fe fe-x-circle" data-toggle="tooltip" style="color:#dd4b39" data-original-title="Không hoạt động"></i>'!!}
+                                    </td>
+                                    <td>{{ $telco->created_at }}</td>
                                     <th>
-                                        <a href="{{ route('telco_edit',$telco->id)}}" class="mr-2"><i class="fe fe-edit"></i></a> | 
-                                        <a href="" class="ml-2"><i class="fe fe-trash-2" style="color:#dd4b39"></i></a>
+                                        <a href="{{ route('telco_edit',$telco->id)}}" class="mr-2"><i class="fe fe-edit" data-toggle="tooltip" data-original-title="Sửa"></i></a> | 
+                                        <a href="" class="ml-2"><i class="fe fe-trash-2" style="color:#dd4b39" data-toggle="tooltip" data-original-title="Xóa"></i></a>
                                     </th>
                                 </tr>
                                 @endforeach

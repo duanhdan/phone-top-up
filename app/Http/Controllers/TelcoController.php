@@ -28,7 +28,7 @@ class TelcoController extends Controller
     public function index()
     {
         $data = $this->data;
-        $data['listTelco'] = Telco::orderBy('id', 'asc')->get();        
+        $data['listTelco'] = Telco::where('status','!=',-1)->orderBy('id', 'asc')->get();        
         return view('telco/index',$data);
     }
 
