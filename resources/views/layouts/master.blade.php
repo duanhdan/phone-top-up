@@ -22,6 +22,7 @@
         <title>@yield('title')</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
+        <script src="/assets/js/vendors/jquery-3.2.1.min.js"></script>
         <script src="/assets/js/require.min.js"></script>
         <script>
             requirejs.config({
@@ -31,6 +32,8 @@
         <!-- Dashboard Core -->
         <link href="/assets/css/dashboard.css" rel="stylesheet" />
         <script src="/assets/js/dashboard.js"></script>
+        <link href="/assets/plugins/jquery.growl/jquery.growl.css" rel="stylesheet" /> 
+        <link rel="stylesheet" href="/assets/plugins/jquery-confirm/jquery-confirm.min.css">   
         <!-- c3.js Charts Plugin -->
         <link href="/assets/plugins/charts-c3/plugin.css" rel="stylesheet" />
         <script src="/assets/plugins/charts-c3/plugin.js"></script>
@@ -38,8 +41,8 @@
         <script src="/assets/plugins/input-mask/plugin.js"></script>
         <!-- Datatables Plugin -->
         <script src="/assets/plugins/datatables/plugin.js"></script>
-        <!-- Datatables Plugin -->
-        <script src="/assets/plugins/jquery.growl/plugin.js"></script>
+        
+            
     </head>
     <body>
         <div class="page">
@@ -51,11 +54,17 @@
             </div>
             {!!view('common/footer')!!}
         </div>
+        
+
+        <script src="/assets/plugins/jquery-confirm/jquery-confirm.min.js"></script>
+        <script src="/assets/plugins/jquery.growl/jquery.growl.js"></script>
+        <script src="/assets/js/common.js"></script>
+
+        @if(session('message_success'))
         <script type="text/javascript">
-            $(document).ready(function(){
-                alert('abc');
-            })
+            $.growl.notice({title: "Success", message: "{{session('message_success')}}" });
         </script>
+        @endif
         @yield('script')
     </body>
 </html>
