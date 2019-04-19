@@ -35,10 +35,10 @@
                                     <td>{!! ($telco->status == 1) ? '<i class="fe fe-check-circle" style="color:#398439;" data-toggle="tooltip" data-original-title="Hoạt động"></i>': '<i class="fe fe-x-circle" data-toggle="tooltip" style="color:#dd4b39" data-original-title="Không hoạt động"></i>'!!}
                                     </td>
                                     <td>{{ $telco->created_at }}</td>
-                                    <th>
+                                    <td>
                                         <a href="{{ route('telco_edit',$telco->id)}}" class="mr-2"><i class="fe fe-edit" data-toggle="tooltip" data-original-title="Sửa"></i></a> | 
                                         <a href="javascript:;" class="ml-2 ajax_action" data-id="{{$telco->id}}" data-method="POST" data-action="{{route('telco_delete')}}" data-label="Xóa Telco"><i class="fe fe-trash-2" style="color:#dd4b39" data-toggle="tooltip" data-original-title="Xóa"></i></a>
-                                    </th>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

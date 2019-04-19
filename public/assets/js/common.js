@@ -14,7 +14,7 @@ function call_ajax(element){
             success: function (response) {
                 if(response.error == 0){
                     $.growl.notice({title: "Thành công", message: response.message });
-                    location.reload();
+                    $(element).closest('tr').remove();
                 } else if(response.error == 1){
                     $.growl.error({title: "Error", message: response.message });
                 }
