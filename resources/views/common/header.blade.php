@@ -94,13 +94,10 @@
                         <a href="{{ route('telco_list') }}" class="nav-link {{ (isset($menu_active) &&  $menu_active == 'telco') ? 'active': '' }}"><i class="fe fe-box"></i> Telco</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a href="javascript:void(0)" class="nav-link" data-toggle="dropdown"><i class="fe fe-calendar"></i> Components</a>
+                        <a href="javascript:void(0)" class="nav-link {{ (isset($menu_active) &&  $menu_active == 'topup') ? 'active': '' }}" data-toggle="dropdown"><i class="fe fe-calendar"></i> Topup</a>
                         <div class="dropdown-menu dropdown-menu-arrow">
-                            <a href="./maps.html" class="dropdown-item ">Maps</a>
-                            <a href="./icons.html" class="dropdown-item ">Icons</a>
-                            <a href="./store.html" class="dropdown-item ">Store</a>
-                            <a href="./blog.html" class="dropdown-item ">Blog</a>
-                            <a href="./carousel.html" class="dropdown-item ">Carousel</a>
+                            <a href="{{ route('topup_upload') }}" class="dropdown-item ">Tạo đơn Topup</a>
+                            <a href="./icons.html" class="dropdown-item ">Topup Mobile</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">

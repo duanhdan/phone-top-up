@@ -33,4 +33,11 @@ Route::group(['middleware' => ['auth']], function()
 
 		Route::post('/delete', 'TelcoController@delete')->name('telco_delete');
 	});
+
+	Route::group(['prefix' => '/topup'], function()
+	{
+		Route::get('/upload_list', 'TopupController@upload_list')->name('topup_upload_list');
+		Route::get('/upload', 'TopupController@showUploadForm')->name('topup_upload');
+		Route::post('/upload', 'TopupController@upload');
+	});
 });
