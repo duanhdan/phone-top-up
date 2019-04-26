@@ -44,12 +44,14 @@ class TopupController extends Controller
             'type' => 'required',
             'file' => 'required|file|mimes:xlsx,xls',
         ]);
+        $input = $request->input();
         $type = (int)$request->input('type');
 
         $file = $request->file;
         $filename = uniqid(date('dmY').'_').'.'.$file->getClientOriginalExtension();
         $file->move('upload', $filename);     
-
+        $input['filename'] = $filename;
+        $input['file_path'] = '/upload/'.$filename;
         $user = \Auth::user();
         //insert telco
         $upload = new Upload();
@@ -64,9 +66,28 @@ class TopupController extends Controller
         if(!empty($upload->id)){
             $data = \Excel::load($filePath, function($reader) {})->get();
             $rows = $data->toArray();
+            $count = $total = 0;
             foreach($rows as $row){
-                TopupMobile::dispatch($row);
+                if(!empty($row['so_can_nap']) && !empty($row['tien_nap']) && !empty($row['thue_bao'])){
+                    $slug = \Str::slug($row['thue_bao'], '-');
+                    $count ++;
+                    $total += $row['tien_nap'];
+                    $data = [
+                        'mobile' => $row['so_can_nap'],
+                        'upload_id' => $upload->id,
+                        'amount' => $row['tien_nap'],
+                        'user_id' => $user->id,
+                        'parent_id' => $user->id,
+                        'type' => ($slug == 'tra-truoc') ? 1 : 2,
+                        'telco' => $row['nha_mang'],
+                        'telco_id' => 1,
+                    ];
+                    TopupMobile::dispatch($data);
+                }
             }
+            $input['count'] = $count;
+            $input['total'] = $total;
+            return view('topup/result_upload',$input);
         }
 
         $request->session()->flash('message_success', 'Thêm mới Telco thành công');

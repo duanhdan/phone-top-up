@@ -9,6 +9,6 @@ class Topup extends Model
     protected $table = 'topup';
 
     protected $fillable = [
-        'status'
+        'user_id','parent_id','telco_id','upload_id','mobile','amount','type','status','result'
     ];
 }

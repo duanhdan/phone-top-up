@@ -22,7 +22,8 @@ class CreateTopupTable extends Migration
             $table->string('mobile');
             $table->integer('amount');
             $table->smallInteger('type');
-            $table->smallInteger('status');
+            $table->smallInteger('status')->default(0);
+            $table->string('result')->nullable();
             $table->timestamps();
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
