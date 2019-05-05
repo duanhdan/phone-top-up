@@ -60,6 +60,10 @@
                                     <td>{{$upload->created_at}}</td>
                                 </tr>
                                 @endforeach
+                                <tr>
+                                    <td>Tổng</td>
+                                    <td colspan="6">{{ number_format($totalAmount) }}</td>
+                                </tr>
                             </tbody>
                         </table>
                         <div class="box-footer clearfix">

@@ -33,11 +33,10 @@ class TopupController extends Controller
     {
         $data = $this->data;
         $filter = $request->all();
-        $upload = Upload::orderBy('id', 'desc');
-        if(!empty($filter['type'])){
-            $upload->where('type',(int)$filter['type']);
-        }
-        $data['listUpload'] = $upload->paginate(20);
+
+        $data['listUpload'] = Upload::getListUpload($filter);
+        $data['totalAmount'] = Upload::getTotalAmountUpload($filter);
+
         $data['filter'] = $filter;   
         return view('topup/upload_list',$data);
     }
@@ -60,7 +59,7 @@ class TopupController extends Controller
         $file->move('upload', $filename);     
         $input['filename'] = $filename;
         $input['file_path'] = '/upload/'.$filename;
-        
+
         $filePath = public_path().$input['file_path'];
         $data = \Excel::load($filePath, function($reader) {})->get();
         $rows = $data->toArray();
@@ -69,6 +68,7 @@ class TopupController extends Controller
             $count ++;
             $total += $row['tien_nap'];
         }
+        //check quota user
 
         $user = \Auth::user();
         //insert telco
@@ -117,7 +117,7 @@ class TopupController extends Controller
         $filter = $request->all();
         //get list topup
         $data['listTopup'] = Topup::getListTopup($filter);
-
+        $data['totalAmount'] = Topup::getTotalAmountTopup($filter);
         //get list telco
         $listTelco = Telco::where('status',1)->orderBy('id','asc')->get()->toArray();
         foreach($listTelco as $telco){
@@ -175,6 +175,7 @@ class TopupController extends Controller
 
         $input = $request->only('telco', 'amount','mobile','type');
         $user = \Auth::user();
+        //check quota user
 
         $data = [
             'mobile' => $input['mobile'],
