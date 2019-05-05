@@ -96,8 +96,10 @@
                     <li class="nav-item dropdown">
                         <a href="javascript:void(0)" class="nav-link {{ (isset($menu_active) &&  $menu_active == 'topup') ? 'active': '' }}" data-toggle="dropdown"><i class="fe fe-calendar"></i> Topup</a>
                         <div class="dropdown-menu dropdown-menu-arrow">
+                            <a href="{{ route('topup_upload_list') }}" class="dropdown-item ">Danh sách đơn Topup</a>
                             <a href="{{ route('topup_upload') }}" class="dropdown-item ">Tạo đơn Topup</a>
-                            <a href="./icons.html" class="dropdown-item ">Topup Mobile</a>
+                            <a href="{{ route('topup_list') }}" class="dropdown-item ">Danh sách Topup Mobile</a>
+                            <a href="{{ route('topup_tra_truoc') }}" class="dropdown-item ">Tạo Topup Mobile</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">

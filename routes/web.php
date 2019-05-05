@@ -36,8 +36,13 @@ Route::group(['middleware' => ['auth']], function()
 
 	Route::group(['prefix' => '/topup'], function()
 	{
-		Route::get('/upload_list', 'TopupController@upload_list')->name('topup_upload_list');
+		Route::get('/danh-sach-don-upload', 'TopupController@upload_list')->name('topup_upload_list');
 		Route::get('/upload', 'TopupController@showUploadForm')->name('topup_upload');
 		Route::post('/upload', 'TopupController@upload');
+
+		Route::get('/tra-truoc', 'TopupController@showTopupTraTruocForm')->name('topup_tra_truoc');
+		Route::get('/tra-sau', 'TopupController@showTopupTraSauForm')->name('topup_tra_sau');		
+		Route::get('/danh-sach-topup-mobile', 'TopupController@topup_list')->name('topup_list');
+		Route::post('/topup-mobile', 'TopupController@topup')->name('topup_mobile');
 	});
 });

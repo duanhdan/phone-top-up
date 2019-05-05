@@ -33,7 +33,8 @@
         <link href="/assets/css/dashboard.css" rel="stylesheet" />
         <script src="/assets/js/dashboard.js"></script>
         <link href="/assets/plugins/jquery.growl/jquery.growl.css" rel="stylesheet" /> 
-        <link rel="stylesheet" href="/assets/plugins/jquery-confirm/jquery-confirm.min.css">   
+        <link rel="stylesheet" href="/assets/plugins/jquery-confirm/jquery-confirm.min.css"> 
+        <link rel="stylesheet" href="/assets/plugins/datetimepicker/jquery.datetimepicker.min.css">   
         <!-- c3.js Charts Plugin -->
         <link href="/assets/plugins/charts-c3/plugin.css" rel="stylesheet" />
         <script src="/assets/plugins/charts-c3/plugin.js"></script>
@@ -58,6 +59,7 @@
 
         <script src="/assets/plugins/jquery-confirm/jquery-confirm.min.js"></script>
         <script src="/assets/plugins/jquery.growl/jquery.growl.js"></script>
+        <!--<script src="/assets/plugins/datetimepicker/jquery.datetimepicker.min.js"></script>-->
         <script src="/assets/js/common.js"></script>
 
         @if(session('message_success'))

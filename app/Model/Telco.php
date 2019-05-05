@@ -11,4 +11,8 @@ class Telco extends Model
     protected $fillable = [
         'name', 'code', 'status'
     ];
+
+    public function getListTopup($params = array()){
+    	
+    }
 }

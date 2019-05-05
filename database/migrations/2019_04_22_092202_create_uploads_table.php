@@ -20,6 +20,7 @@ class CreateUploadsTable extends Migration
             $table->string('file');
             $table->integer('discount');
             $table->smallInteger('type');
+            $table->bigInteger('total_price')->default(0);
             $table->timestamps();
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';

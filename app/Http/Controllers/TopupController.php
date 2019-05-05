@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Jobs\TopupMobile;
 use App\Model\Upload;
 use App\Model\Topup;
+use App\Model\Telco;
+use App\User;
 
 class TopupController extends Controller
 {
@@ -27,14 +29,20 @@ class TopupController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function upload_list(Request $request)
     {
         $data = $this->data;
-        $data['listTelco'] = Telco::where('status','!=',-1)->orderBy('id', 'asc')->get();        
-        return view('telco/index',$data);
+        $filter = $request->all();
+        $upload = Upload::orderBy('id', 'desc');
+        if(!empty($filter['type'])){
+            $upload->where('type',(int)$filter['type']);
+        }
+        $data['listUpload'] = $upload->paginate(20);
+        $data['filter'] = $filter;   
+        return view('topup/upload_list',$data);
     }
 
-    public function showUploadForm(){
+    public function showUploadForm(Request $request){
         $data = $this->data;
         return view('topup/upload',$data);
     }
@@ -52,6 +60,16 @@ class TopupController extends Controller
         $file->move('upload', $filename);     
         $input['filename'] = $filename;
         $input['file_path'] = '/upload/'.$filename;
+        
+        $filePath = public_path().$input['file_path'];
+        $data = \Excel::load($filePath, function($reader) {})->get();
+        $rows = $data->toArray();
+        $count = $total = 0;
+        foreach($rows as $row){
+            $count ++;
+            $total += $row['tien_nap'];
+        }
+
         $user = \Auth::user();
         //insert telco
         $upload = new Upload();
@@ -62,16 +80,11 @@ class TopupController extends Controller
         $upload->discount = ($type == 1) ? 28 : 25;
         $upload->save();
 
-        $filePath = public_path().$upload->file;
+        
         if(!empty($upload->id)){
-            $data = \Excel::load($filePath, function($reader) {})->get();
-            $rows = $data->toArray();
-            $count = $total = 0;
             foreach($rows as $row){
                 if(!empty($row['so_can_nap']) && !empty($row['tien_nap']) && !empty($row['thue_bao'])){
                     $slug = \Str::slug($row['thue_bao'], '-');
-                    $count ++;
-                    $total += $row['tien_nap'];
                     $data = [
                         'mobile' => $row['so_can_nap'],
                         'upload_id' => $upload->id,
@@ -87,6 +100,9 @@ class TopupController extends Controller
             }
             $input['count'] = $count;
             $input['total'] = $total;
+            //update total price
+            $upload->total_price = $total;
+            $upload->save();
             return view('topup/result_upload',$input);
         }
 
@@ -95,71 +111,82 @@ class TopupController extends Controller
 
     }
 
-    public function showAddForm(){
+    public function topup_list(Request $request)
+    {
         $data = $this->data;
-        return view('telco/add',$data);
+        $filter = $request->all();
+        //get list topup
+        $data['listTopup'] = Topup::getListTopup($filter);
+
+        //get list telco
+        $listTelco = Telco::where('status',1)->orderBy('id','asc')->get()->toArray();
+        foreach($listTelco as $telco){
+            $data['listTelco'][$telco['id']] = $telco;
+        }
+
+        //get list user
+        $listUser = User::orderBy('id','asc')->get()->toArray();
+        foreach($listUser as $user){
+            $data['listUser'][$user['id']] = $user;
+        }
+
+        $data['filter'] = $filter;
+        $data['status'] = [0 => 'Đang xử lý', 1 => 'Thành công'];
+        return view('topup/topup_list',$data);
     }
 
-    public function add(Request $request){
-        $request->validate([
-            'name' => 'required',
-            'code' => 'required',
-        ]);
-        $input = $request->only('name', 'code');
-        //insert telco
-        $telco = new Telco($input);
-        $telco->save();
-
-        $request->session()->flash('message_success', 'Thêm mới Telco thành công');
-        return redirect(route('telco_list'));
-
-    }
-
-    public function showEditForm($id){
+    public function showTopupTraTruocForm(Request $request){
         $data = $this->data;
-        $data['telco'] = Telco::find($id);
-        if(!$data['telco']){
-            return abort(404);
-        }
-
-        return view('telco/edit',$data);
+        $data['listTelco'] = Telco::where('status',1)->orderBy('id','asc')->get();
+        $data['arrAmount'] = [50000,100000,200000,300000,500000,1000000];
+        $data['type'] = 1;
+        return view('topup/topup_mobile',$data);
     }
 
-    public function edit(Request $request, $id){
+    public function showTopupTraSauForm(Request $request){
+        $data = $this->data;
+        $data['listTelco'] = Telco::where('status',1)->orderBy('id','asc')->get();
+        $data['type'] = 2;
+        return view('topup/topup_mobile',$data);
+    }
+
+    public function topup(Request $request){
         $request->validate([
-            'name' => 'required',
-            'code' => 'required',
+            'type'      => 'required|integer',
         ]);
 
-        $telco = Telco::find($id);
-        if(!$telco){
-            return abort(404);
-        }
-        $input = $request->only('name', 'code','status');
-        $telco->name    = $input['name'];
-        $telco->code    = $input['code'];
-        $telco->status  = !empty($input['status']) ? (int)$input['status'] : 0;
-        $telco->save();
-        $request->session()->flash('message_success', 'Cập nhật Telco thành công');
-        return redirect(route('telco_list'));
+        $rules = [
+            'telco'     => 'required',
+            'mobile'    => 'required|digits:10',
+        ];
+        $type = (int)$request->input('type');
+        
+        switch ($type) {
+            case 1:
+                $rules['amount'] = 'required|integer';
+                break;
+            case 2:
+                $rules['amount'] = 'required|integer|min:50000|max:1000000';
+                break;
+            default:
+                break;
+        }      
+        $request->validate($rules);
+
+        $input = $request->only('telco', 'amount','mobile','type');
+        $user = \Auth::user();
+
+        $data = [
+            'mobile' => $input['mobile'],
+            'amount' => $input['amount'],
+            'user_id' => $user->id,
+            'parent_id' => $user->id,
+            'type' => $type,
+            'telco_id' => (int)$input['telco'],
+        ];
+        TopupMobile::dispatch($data);
+        $data['telco'] = Telco::find((int)$input['telco']);
+        return view('topup/result_topup',$data);
     }
 
-    public function delete(Request $request){
-        $request->validate([
-            'id' => 'required',
-        ]);
-        $input = $request->only('id');
-        $id = (int)$input['id'];
-
-        $telco = Telco::find($id);
-        if(!$telco){
-            return response()->json(['error' => 1, 'message' => 'Telco không tồn tại']);
-        }
-        //update status = -1
-        $telco->status = -1;
-        $telco->save();
-
-        return response()->json(['error' => 0, 'message' => 'Xóa Telco thành công']);
-
-    }
 }

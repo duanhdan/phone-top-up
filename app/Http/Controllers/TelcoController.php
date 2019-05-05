@@ -67,7 +67,7 @@ class TelcoController extends Controller
             'name' => 'required',
             'code' => 'required',
         ]);
-
+        
         $telco = Telco::find($id);
         if(!$telco){
             return abort(404);
